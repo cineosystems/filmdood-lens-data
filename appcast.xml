@@ -3,13 +3,13 @@
   <channel>
     <title>filmdood Lens Catalog</title>
     <item>
-      <title>Version 1.0.2</title>
-      <pubDate>Mon, 12 Oct 2026 09:46:12 +0000</pubDate>
-      <sparkle:version>4</sparkle:version>
-      <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
+      <title>Version 1.0.3</title>
+      <pubDate>Mon, 12 Oct 2026 10:55:49 +0000</pubDate>
+      <sparkle:version>5</sparkle:version>
+      <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-      <description><![CDATA[<ul><li>Improved catalog updates</li></ul>]]></description>
-      <enclosure url="https://github.com/cineosystems/filmdood-lens-data/releases/download/mac-v1.0.2/filmdood-Lens-Catalog-1.0.2.dmg" sparkle:edSignature="Rg3D33cz7z3JUOuC/gj7Y79K63kgZuz40PvXHU+X55RCQcvTGJI3YJfwYiq3y8Y+nua9NeagvJUy91GXuzBaAA==" length="4653568" type="application/octet-stream"/>
+      <description><![CDATA[<ul><li>Fixed overlapping toolbar buttons after launch and after clearing filters</li><li>Better contrast for the selected brand in dark mode</li><li>A filter with one choice now shows that choice (e.g. “Zoom” instead of “Type · 1”)</li><li>Rounded corner where the sidebar meets the toolbar</li></ul>]]></description>
+      <enclosure url="https://github.com/cineosystems/filmdood-lens-data/releases/download/mac-v1.0.3/filmdood-Lens-Catalog-1.0.3.dmg" sparkle:edSignature="9gZp6nqFYrgRD77erWYrukiQUdcKc6lID+FWAgjYG+nWyr2tfLDdBhGVQc5VaCT9Nla15xHQQq0DLIWzM+TvDg==" length="4679680" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
