@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>filmdood Lens Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: filmdood app shell. Brand nav left, brand blocks with compact series rows right; rows expand into series cards. */
+:root{
+  /* light — filmdood light palette */
+  --bg:#f0eee6; --card:#faf9f5; --pop:#f9f9f9; --muted:#e8e5da; --border:#d9d5c8; --fg:#1d1d24; --fg-2:#55555f; --fg-3:#8a8891;
+  --primary:#3e55c8; --primary-fg:#ffffff; --ring:#3e55c8;
+  --indigo:#5c5ceb; --indigo-soft:#808cf8; --sel-bg:rgba(62,85,200,.09); --sel-bd:rgba(62,85,200,.55); --sel-fg:#3e55c8;
+  --sph:#a06c00; --sph-bg:rgba(223,177,80,.16); --sph-bd:rgba(160,108,0,.45); --sph-mark:#d39a1c;
+  --ana:#3e55c8; --ana-bg:rgba(92,92,235,.10); --ana-bd:rgba(62,85,200,.45); --ana-mark:#5c5ceb;
+  --shadow:0 10px 30px rgba(40,36,20,.12),0 2px 6px rgba(40,36,20,.06); --scrim:rgba(30,28,20,.28);
+  --f-sans:'Inter',system-ui,-apple-system,sans-serif; --f-mono:'JetBrains Mono','Fira Code',ui-monospace,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#202022; --card:#272728; --pop:#2e2e2f; --muted:#383839; --border:#545455; --fg:#eeeeee; --fg-2:#b4b4b6; --fg-3:#818182;
+  --primary:#cfcfcf; --primary-fg:#202022; --ring:#cfcfcf;
+  --indigo:#818cf8; --indigo-soft:#818cf8; --sel-bg:#383839; --sel-bd:rgba(129,140,248,.6); --sel-fg:#eeeeee;
+  --sph:#fbbf24; --sph-bg:rgba(251,191,36,.14); --sph-bd:rgba(251,191,36,.5); --sph-mark:#fbbf24;
+  --ana:#60a5fa; --ana-bg:rgba(96,165,250,.14); --ana-bd:rgba(96,165,250,.5); --ana-mark:#60a5fa;
+  --shadow:0 14px 40px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.3); --scrim:rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#202022; --card:#272728; --pop:#2e2e2f; --muted:#383839; --border:#545455; --fg:#eeeeee; --fg-2:#b4b4b6; --fg-3:#818182;
+  --primary:#cfcfcf; --primary-fg:#202022; --ring:#cfcfcf;
+  --indigo:#818cf8; --indigo-soft:#818cf8; --sel-bg:#383839; --sel-bd:rgba(129,140,248,.6); --sel-fg:#eeeeee;
+  --sph:#fbbf24; --sph-bg:rgba(251,191,36,.14); --sph-bd:rgba(251,191,36,.5); --sph-mark:#fbbf24;
+  --ana:#60a5fa; --ana-bg:rgba(96,165,250,.14); --ana-bd:rgba(96,165,250,.5); --ana-mark:#60a5fa;
+  --shadow:0 14px 40px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.3); --scrim:rgba(0,0,0,.5); color-scheme:dark}
+:root[data-theme="light"]{color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:13.5px;line-height:1.4;-webkit-font-smoothing:antialiased}
+html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease),fill .35s var(--ease)!important}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ring);outline-offset:1px}
+h1,h2,h3{font-family:var(--f-mono);font-weight:700;letter-spacing:-.02em}
+.app{min-height:100%}
+
+/* ---------- brand lockup + brand picker ---------- */
+.lockup{display:flex;align-items:center;gap:10px;min-width:0}
+.lockup img{width:30px;height:30px;flex:none}
+.lockup div{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.lockup b{font-family:var(--f-mono);font-size:16px;font-weight:700;letter-spacing:-.03em}
+.lockup span{font-family:var(--f-mono);font-size:11.5px;font-weight:500;color:var(--fg-3);letter-spacing:.02em}
+.field{width:100%;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12.5px;transition:border-color .15s,box-shadow .15s}
+.field:focus{outline:none;border-color:var(--sel-bd);box-shadow:0 0 0 3px var(--sel-bg)}
+.bwrap{position:relative}
+.bbtn .lbl{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bbtn .chev{transition:transform .25s var(--ease)}
+.bbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.bdrop{position:absolute;top:calc(100% + 6px);left:0;z-index:15;width:280px;max-width:calc(100vw - 32px);background:var(--pop);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:8px;display:flex;flex-direction:column;gap:6px;transform-origin:top left;animation:popin .22s var(--ease)}
+.bdrop.closing{animation:popout .16s ease-in forwards}
+.ball{justify-content:space-between;width:100%}
+.ball[aria-pressed="true"]{border-color:var(--sel-bd);background:var(--sel-bg);color:var(--sel-fg)}
+.ball small,.bitem small{font-family:var(--f-mono);font-size:10.5px;color:var(--fg-3)}
+.blist{max-height:186px;overflow:auto;margin:0 -2px;padding:0 2px;scroll-behavior:smooth}
+.bitem{width:100%;display:flex;align-items:center;gap:8px;border:0;background:none;border-radius:5px;padding:0 8px;height:31px;cursor:pointer;text-align:left;font-size:13px;color:var(--fg);position:relative;transition:background-color .15s,padding .2s var(--ease)}
+.bitem:hover{background:var(--muted);padding-left:11px}
+.bitem::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;border-radius:2px;background:var(--indigo);transform:scaleY(0);transition:transform .25s var(--ease)}
+.bitem[aria-current="true"]{background:var(--sel-bg);font-weight:600}
+.bitem[aria-current="true"]::before{transform:scaleY(1)}
+.bitem small{margin-left:auto}
+.bitem.zero{opacity:.4}
+/* advanced (in settings) */
+.adv{border-top:1px solid var(--border);margin-top:4px;padding-top:8px}
+.advbtn{border:0;background:none;padding:4px 0;cursor:pointer;color:var(--fg-2);font-size:12.5px;display:flex;align-items:center;gap:6px;width:100%}
+.advbtn svg{transition:transform .25s var(--ease)}
+.advbtn[aria-expanded="true"] svg{transform:rotate(90deg)}
+.advbody{display:flex;flex-direction:column;gap:8px;padding:6px 0 4px;font-size:12px;color:var(--fg-3)}
+.advbody b{font-family:var(--f-mono);color:var(--fg-2);font-weight:500}
+.drop{border:1px dashed var(--border);border-radius:8px;padding:12px;text-align:center;transition:border-color .2s,background-color .2s}
+.drop.drag{border-color:var(--indigo);background:var(--sel-bg)}
+.drop label{color:var(--indigo);cursor:pointer;font-weight:500}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+
+/* ---------- main ---------- */
+.main{min-width:0;max-width:1500px;margin:0 auto;padding-inline:26px;padding-block:16px 50px}
+.topbar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.topbar .tr{display:flex;gap:8px;align-items:center}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.head h1{font-size:26px;margin:0;line-height:1.15}
+.head .sub{color:var(--fg-2);margin-top:2px;font-family:var(--f-mono);font-size:12.5px}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:7px;padding:3px;background:var(--card);position:relative}
+.seg button{border:0;background:none;padding:5px 12px;border-radius:5px;cursor:pointer;color:var(--fg-3);font-size:13px;display:inline-flex;align-items:center;gap:6px;position:relative;z-index:1;transition:color .2s}
+.seg button[aria-pressed="true"]{color:var(--fg)}
+.seg .glider{position:absolute;top:3px;bottom:3px;left:3px;width:0;border-radius:5px;background:var(--bg);box-shadow:0 0 0 1px var(--border);transition:left .3s var(--ease),width .3s var(--ease)}
+.seg.icons button{padding:5px 8px}
+.btn{border:1px solid var(--border);background:var(--card);border-radius:7px;padding:6px 12px;cursor:pointer;font-size:13px;display:inline-flex;gap:6px;align-items:center;transition:background-color .15s,border-color .15s,transform .12s}
+.btn:hover{background:var(--muted)}
+.btn:active{transform:scale(.97)}
+.btn.icon{padding:7px}
+.btn.primary{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn svg{flex:none}
+.gear svg{transition:transform .5s var(--ease)}
+.gear[aria-expanded="true"] svg{transform:rotate(90deg)}
+
+.bars{display:grid;grid-template-columns:auto auto minmax(60px,1fr) auto;gap:3px 14px;align-items:center;margin:14px 0;font-family:var(--f-mono);font-size:11px;color:var(--fg-2)}
+.bars .track{height:3px;border-radius:2px;background:var(--muted);position:relative;overflow:hidden}
+.bars .track i{position:absolute;inset:0 auto 0 0;border-radius:2px;transition:width .6s var(--ease)}
+.bars .c-a{color:var(--sph)} .bars .c-b{color:var(--ana)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.search{position:relative;flex:1 1 260px;max-width:460px}
+.search input{padding:7px 10px 7px 30px;font-size:13.5px}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--fg-3)}
+select.field{width:auto;padding:7px 9px;font-size:13.5px}
+.btn .dot{min-width:17px;height:17px;border-radius:9px;background:var(--primary);color:var(--primary-fg);font-size:10.5px;display:inline-grid;place-items:center;padding:0 4px;font-family:var(--f-mono);animation:pop .3s var(--ease)}
+
+/* collapsible (grid-rows trick) */
+.collapse{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s var(--ease),opacity .25s;opacity:0}
+.collapse.open{grid-template-rows:1fr;opacity:1}
+.collapse>div{overflow:hidden;min-height:0}
+
+/* filter panel */
+.fpanel{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 18px}
+.fg{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fl{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--fg-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{border:1px solid var(--border);background:transparent;border-radius:5px;padding:2px 8px;font-size:12px;cursor:pointer;display:inline-flex;gap:5px;align-items:center;transition:background-color .18s,border-color .18s,color .18s,transform .12s,opacity .2s}
+.chip:hover:not(:disabled){border-color:var(--sel-bd)}
+.chip:active:not(:disabled){transform:scale(.95)}
+.chip small{font-family:var(--f-mono);font-size:10px;color:var(--fg-3)}
+.chip[aria-pressed="true"]{border-color:var(--sel-bd);background:var(--sel-bg);color:var(--sel-fg)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.75}
+.chip:disabled{opacity:.35;cursor:default}
+.row2{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;color:var(--fg-3)}
+.fpanel .field{font-family:var(--f-mono);font-size:12px;width:100%}
+.fend{grid-column:1/-1;display:flex;justify-content:flex-end}
+
+/* brand blocks */
+.block{margin-bottom:18px}
+.enter{animation:rise .42s var(--ease) backwards;animation-delay:calc(var(--i,0) * 45ms)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}}
+@keyframes fade{from{opacity:0}}
+.bhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--fg-2);border-radius:5px;padding:7px 12px;margin-bottom:6px}
+.bhead h2{font-size:15px;margin:0}
+.cnt{border:1px solid var(--fg-3);border-radius:4px;padding:0 6px;font-size:11.5px;color:var(--fg-2);font-family:var(--f-mono)}
+.bhead .meta{font-family:var(--f-mono);font-size:11.5px;color:var(--fg-3)}
+.bhead .right{margin-left:auto;display:flex;gap:5px}
+.pill{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);border-radius:4px;padding:0 6px;font-size:11.5px;line-height:19px;white-space:nowrap;color:var(--fg-2)}
+.pill.a{border-color:var(--sph-bd);background:var(--sph-bg);color:var(--sph)}
+.pill.b{border-color:var(--ana-bd);background:var(--ana-bg);color:var(--ana)}
+.pill.m{font-family:var(--f-mono);font-size:10.5px}
+
+.tbox{border:1px solid var(--border);border-radius:7px;overflow:hidden;background:var(--card)}
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th{font-weight:600;font-size:12.5px;color:var(--fg);text-align:left;padding:8px 10px;white-space:nowrap;border-bottom:1px solid var(--border)}
+th.num,td.num{text-align:right}
+th.sort{cursor:pointer;user-select:none;transition:color .15s} th.sort:hover{color:var(--indigo)}
+th[aria-sort="ascending"]::after{content:" ↑";color:var(--indigo)} th[aria-sort="descending"]::after{content:" ↓";color:var(--indigo)}
+td{padding:6px 10px;border-bottom:1px solid var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;transition:background-color .15s}
+td.m{font-family:var(--f-mono);font-size:12px}
+.na{color:var(--fg-3)}
+.sec{color:var(--fg-3);margin-left:5px}
+tbody tr{cursor:pointer}
+tbody tr:hover>td{background:var(--muted)}
+tbody tr:last-child>td{border-bottom:0}
+tr.srow td.name{font-weight:600}
+tr.srow td.name small{font-weight:400;color:var(--fg-3);margin-left:6px;font-size:11.5px}
+tr.srow .caret{display:inline-block;width:12px;color:var(--fg-3);transition:transform .3s var(--ease),color .2s}
+tr.srow[aria-expanded="true"] .caret{transform:rotate(90deg);color:var(--indigo)}
+tr.srow[aria-expanded="true"]>td{background:var(--bg);border-bottom-color:transparent}
+.nbox{display:inline-grid;place-items:center;min-width:22px;height:20px;border:1px solid var(--fg-3);border-radius:4px;font-family:var(--f-mono);font-size:11px;color:var(--fg-2);padding:0 4px}
+tr.card>td{padding:0;background:var(--bg);cursor:default;white-space:normal;border-bottom:1px solid var(--muted)}
+tr.card:hover>td{background:var(--bg)}
+tr.card .collapse>div>div{padding:2px 10px 10px}
+
+/* series card */
+.scard{background:var(--card);border:1px solid var(--border);border-radius:7px;overflow:hidden}
+.scard .top{display:flex;flex-wrap:wrap;gap:5px;padding:10px 12px 0;align-items:center}
+.ruler{position:relative;height:30px;margin:14px 14px 2px;border-top:1px solid var(--border)}
+.ruler .tk{position:absolute;top:0;height:5px;border-left:1px solid var(--fg-3)}
+.ruler .tl{position:absolute;top:6px;transform:translateX(-50%);font-family:var(--f-mono);font-size:9px;color:var(--fg-3)}
+.ruler .pt{position:absolute;top:-5px;width:9px;height:9px;margin-left:-4.5px;border-radius:2px;background:var(--sph-mark);border:2px solid var(--card);cursor:pointer;transition:transform .15s}
+.ruler.ana .pt{background:var(--ana-mark)}
+.ruler .zb{position:absolute;top:-3px;height:5px;border-radius:3px;background:var(--sph-mark);cursor:pointer;min-width:4px;transform-origin:left;transition:filter .15s}
+.ruler.ana .zb{background:var(--ana-mark)}
+.ruler .pt:hover{transform:scale(1.5);z-index:2}
+.ruler .zb:hover{filter:brightness(1.15)}
+.collapse.open .ruler .pt{animation:pop .4s var(--ease) backwards;animation-delay:calc(120ms + var(--j,0) * 35ms)}
+.collapse.open .ruler .zb{animation:grow .5s var(--ease) backwards;animation-delay:120ms}
+@keyframes grow{from{transform:scaleX(0)}}
+.scard th{font-size:11px;color:var(--fg-3);font-weight:600;padding:6px 10px;border-top:1px solid var(--muted)}
+.scard td{padding:5px 10px}
+.scard td.lens b{font-family:var(--f-mono);font-weight:700;font-size:12.5px}
+.scard td.lens small{color:var(--fg-3);margin-left:6px;font-size:11px}
+
+.more{display:flex;margin:12px auto}
+.empty{border:1px dashed var(--border);border-radius:8px;padding:36px 20px;text-align:center;color:var(--fg-2);animation:fade .3s}
+.loading{padding:50px 20px;text-align:center;color:var(--fg-3);font-family:var(--f-mono);font-size:12.5px}
+.loading i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--indigo);margin:0 3px;animation:blink 1s infinite alternate}
+.loading i:nth-child(2){animation-delay:.2s}.loading i:nth-child(3){animation-delay:.4s}
+@keyframes blink{from{opacity:.2;transform:translateY(0)}to{opacity:1;transform:translateY(-3px)}}
+
+/* overlays */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:20;animation:fade .25s}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:var(--pop);z-index:21;overflow:auto;border-left:1px solid var(--border);box-shadow:var(--shadow);
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 20px calc(env(safe-area-inset-bottom,0px) + 28px);animation:slidein .34s var(--ease)}
+@keyframes slidein{from{transform:translateX(40px);opacity:0}}
+.closing .sheet{animation:slideout .22s ease-in forwards}
+.closing .scrim,.closing .pop-wrap{animation:fadeout .22s ease-in forwards}
+@keyframes slideout{to{transform:translateX(40px);opacity:0}}
+@keyframes fadeout{to{opacity:0}}
+.sheet .close{float:right}
+.sheet .eyebrow{font-size:11.5px;color:var(--indigo);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.sheet h2{font-size:22px;line-height:1.2;margin:3px 0 2px}
+.sheet .sub{color:var(--fg-2);font-size:13px}
+.sheet .big{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}
+.sheet .big div{border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-size:10.5px;color:var(--fg-3);background:var(--card);animation:rise .4s var(--ease) backwards;animation-delay:calc(80ms + var(--i)*50ms)}
+.sheet .big b{display:block;font-family:var(--f-mono);font-size:15px;color:var(--fg);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sheet h3{font-family:var(--f-sans);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--fg-3);margin:18px 0 6px;font-weight:600}
+dl.spec{display:grid;grid-template-columns:minmax(105px,auto) minmax(0,1fr);margin:0;font-size:12.5px}
+dl.spec dt,dl.spec dd{padding:6px 0;border-bottom:1px solid var(--muted);margin:0}
+dl.spec dt{color:var(--fg-2);padding-right:12px}
+dl.spec dd{font-family:var(--f-mono);font-size:12px;min-width:0;overflow-wrap:anywhere}
+dl.spec dd.na{color:var(--fg-3);font-family:var(--f-sans);font-style:italic}
+.sheet p.note{font-size:12.5px;color:var(--fg-2);margin:0 0 6px}
+.srcs{display:flex;flex-direction:column;gap:6px}
+.src{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--card);text-decoration:none;color:inherit;transition:border-color .2s,transform .2s var(--ease),background-color .2s}
+a.src:hover{border-color:var(--sel-bd);transform:translateX(3px)}
+.src .ic{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:var(--sel-bg);color:var(--indigo);flex:none}
+.src .tx{min-width:0;flex:1}
+.src .tx b{display:block;font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src .tx small{display:block;color:var(--fg-3);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src .go{font-family:var(--f-mono);font-size:11px;color:var(--indigo);white-space:nowrap;display:inline-flex;gap:4px;align-items:center}
+.sibs{display:flex;flex-wrap:wrap;gap:4px}
+.sibs button{border:1px solid var(--border);background:transparent;border-radius:5px;padding:1px 7px;font-family:var(--f-mono);font-size:11.5px;cursor:pointer;transition:all .15s}
+.sibs button:hover{border-color:var(--sel-bd)}
+.sibs button[aria-current="true"]{border-color:var(--sel-bd);background:var(--sel-bg);color:var(--sel-fg)}
+
+/* settings popover */
+.pop-wrap{position:fixed;inset:0;z-index:30}
+.popover{position:absolute;top:calc(env(safe-area-inset-top,0px) + 54px);right:20px;width:min(340px,calc(100% - 32px));background:var(--pop);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:14px;transform-origin:top right;animation:popin .26s var(--ease);max-height:calc(100vh - 80px);overflow:auto}
+@keyframes popin{from{opacity:0;transform:scale(.94) translateY(-6px)}}
+.closing .popover{animation:popout .18s ease-in forwards}
+@keyframes popout{to{opacity:0;transform:scale(.96) translateY(-4px)}}
+.popover h3{font-size:14px;margin:0 0 2px}
+.popover p{margin:0 0 12px;color:var(--fg-3);font-size:12px}
+.pref{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.pref .fl{display:flex;justify-content:space-between;gap:8px}
+.pref .fl em{font-style:normal;font-family:var(--f-mono);text-transform:none;letter-spacing:0;color:var(--fg-2)}
+.pref .seg{width:100%}
+.pref .seg button{flex:1;justify-content:center;font-size:12.5px}
+
+@media (max-width:900px){
+  .main{padding-inline:16px}
+  .sheet .big{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .popover{right:16px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* spec colours (same as the apps) */
+:root{--c-cf:#4a58c9;--c-fr:#177e72;--c-w:#a15c12;--c-l:#9c467a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c-cf:#8e99f7;--c-fr:#5cc9b5;--c-w:#e2a458;--c-l:#d88bb9}}
+:root[data-theme="dark"]{--c-cf:#8e99f7;--c-fr:#5cc9b5;--c-w:#e2a458;--c-l:#d88bb9}
+.c-cf{color:var(--c-cf)!important}.c-fr{color:var(--c-fr)!important}.c-w{color:var(--c-w)!important}.c-l{color:var(--c-l)!important}
+/* update banner */
+.upd{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin:0 0 14px;animation:updIn .35s var(--ease)}
+@keyframes updIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.upd.out{animation:updOut .25s var(--ease) forwards}@keyframes updOut{to{opacity:0;transform:translateY(-6px)}}
+.upd .ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--indigo) 14%,transparent);color:var(--indigo);flex:none}
+.upd .tx{flex:1;min-width:0}.upd h4{margin:0;font:600 13px var(--f-sans);color:var(--fg);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.upd .ver{font:600 11px var(--f-mono);color:var(--indigo);border:1px solid color-mix(in srgb,var(--indigo) 60%,transparent);border-radius:4px;padding:0 6px}
+.upd .dt{font:400 11px var(--f-mono);color:var(--fg-3)}
+.upd .chips{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0}
+.upd .chip{font:500 11px var(--f-mono);padding:3px 7px;border-radius:5px}
+.upd .chip.n{color:var(--indigo);background:color-mix(in srgb,var(--indigo) 12%,transparent)}
+.upd .chip.u{color:var(--sph-mark);background:color-mix(in srgb,var(--sph-mark) 12%,transparent)}
+.upd .chip.r{color:var(--fg-3);background:color-mix(in srgb,var(--fg-3) 12%,transparent)}
+.upd .tot{font:400 11px var(--f-mono);color:var(--fg-3)}
+.upd .x{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:none;color:var(--fg-2);display:grid;place-items:center;cursor:pointer;flex:none;transition:background .15s,color .15s}
+.upd .x:hover{background:var(--muted);color:var(--fg)}
+/* lock screen */
+.lock{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:100;padding:16px}
+.lock form{width:min(340px,100%);background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.lock .lk{display:flex;gap:10px;align-items:center}.lock .lk img{width:34px;height:34px}
+.lock .lk b{font:700 17px var(--f-mono);color:var(--fg);display:block}.lock .lk span{font:500 12px var(--f-mono);color:var(--fg-3)}
+.lock input{font:15px var(--f-sans);padding:10px 12px;border-radius:9px;border:1px solid var(--border);background:var(--bg);color:var(--fg);outline:none}
+.lock input:focus{border-color:var(--indigo)}
+.lock .err{font:12px var(--f-sans);color:#c2410c;min-height:16px}
+.lock button{font:600 14px var(--f-sans);padding:10px;border-radius:9px;border:0;background:var(--primary);color:var(--primary-fg);cursor:pointer}
+.lock label{font:13px var(--f-sans);color:var(--fg-2);display:flex;gap:6px;align-items:center}
+</style>
+</head><body>
+
+<div class="app">
+  <main class="main">
+    <div class="topbar">
+      <div class="lockup"><img alt="filmdood logo" src="data:image/png;base64,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"><div><b>filmdood</b><span>Lens Catalog</span></div></div>
+      <div class="tr">
+      <div class="seg icons" role="group" aria-label="Theme" id="themeseg">
+        <span class="glider"></span>
+        <button type="button" data-theme-set="light" title="Light" aria-label="Light theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button type="button" data-theme-set="dark" title="Dark" aria-label="Dark theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+        <button type="button" data-theme-set="system" title="System" aria-label="System theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+      </div>
+      <button type="button" class="btn icon gear" id="gear" aria-expanded="false" aria-label="Settings" title="Settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      </div>
+    </div>
+
+    <div class="head">
+      <div>
+        <h1 id="title">Lens Catalog</h1>
+        <div class="sub" id="sub">Loading…</div>
+      </div>
+      <div class="toolbar" style="margin:0">
+        <div class="seg" role="group" aria-label="View" id="viewseg">
+          <span class="glider"></span>
+          <button type="button" id="v-series" aria-pressed="true">Series</button>
+          <button type="button" id="v-lenses" aria-pressed="false">Lenses</button>
+        </div>
+        <button type="button" class="btn" id="copy" title="Copy the filtered lenses as a table for Excel or Sheets">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy table</span></button>
+      </div>
+    </div>
+
+    <div id="updslot"></div>
+    <div class="bars" id="bars"></div>
+
+    <div class="toolbar">
+      <div class="bwrap" id="bwrap">
+        <button type="button" class="btn bbtn" id="bbtn" aria-expanded="false" aria-haspopup="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
+          <span class="lbl" id="blabel">All brands</span>
+          <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="bdrop" id="bdrop" hidden>
+          <input type="search" class="field" id="bq" placeholder="Find a brand" aria-label="Find a brand">
+          <button type="button" class="btn ball" id="allb" aria-pressed="true">All brands <small id="allcount"></small></button>
+          <nav class="blist" id="blist" aria-label="Brands"></nav>
+        </div>
+      </div>
+      <label class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" class="field" id="q" placeholder="Search series or lenses… e.g. Supreme 50" aria-label="Search"></label>
+      <select class="field" id="fmt" aria-label="Optical format"><option value="">All formats</option><option value="spherical">Spherical</option><option value="anamorphic">Anamorphic</option></select>
+      <button type="button" class="btn" id="ftog" aria-expanded="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg>Filters <span class="dot" id="fdot" hidden></span></button>
+    </div>
+
+    <div class="collapse" id="fcol"><div>
+      <div class="fpanel">
+        <div class="fg"><div class="fl">Type</div><div class="chips" id="f-type"></div></div>
+        <div class="fg"><div class="fl">Squeeze</div><div class="chips" id="f-squeeze"></div></div>
+        <div class="fg"><div class="fl">Coverage</div><div class="chips" id="f-cov"></div></div>
+        <div class="fg" style="grid-column:span 2"><div class="fl">Mount</div><div class="chips" id="f-mount"></div></div>
+        <div class="fg"><div class="fl">Focal length (mm)</div><div class="row2"><input type="number" class="field" id="fmin" min="1" placeholder="min" aria-label="Minimum focal length"><span>–</span><input type="number" class="field" id="fmax" min="1" placeholder="max" aria-label="Maximum focal length"></div></div>
+        <div class="fg"><label class="fl" for="tmax">Max aperture at least</label>
+          <select class="field" id="tmax"><option value="">Any</option><option value="1.0">1.0 or faster</option><option value="1.4">1.4 or faster</option><option value="1.5">1.5 or faster</option><option value="2">2.0 or faster</option><option value="2.2">2.2 or faster</option><option value="2.8">2.8 or faster</option><option value="4">4.0 or faster</option></select></div>
+        <div class="fend"><button type="button" class="btn" id="reset">Reset filters</button></div>
+      </div>
+    </div></div>
+
+    <div id="out"><div class="loading"><i></i><i></i><i></i><br><br>Loading catalog</div></div>
+  </main>
+</div>
+<div id="sheet-root"></div>
+<div id="pop-root"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MOUNT_ALIAS={"Sony E":"E","Canon EF":"EF","Micro Four Thirds":"MFT","Nikon F":"F","Canon RF":"RF","Fujifilm X":"X","Leica L":"L","Nikon Z":"Z","Canon EF-M":"EF-M","Fujifilm G":"G","GFX":"G","Leica M":"M","PL LDS-1":"PL","PL LDS":"PL","PL UMS":"PL","Panavision 70":"PV70"};
+const MOUNT_LABEL={E:"Sony E",EF:"Canon EF",RF:"Canon RF","EF-M":"Canon EF-M",F:"Nikon F",Z:"Nikon Z",L:"L-Mount",X:"Fuji X",G:"Fuji G",M:"Leica M",PV:"Panavision",PV70:"Panavision 70"};
+const COVS=[["S16","Super 16"],["S35","Super 35"],["FF","Full Frame"],["LF","LF / VV"],["65","65 mm"]];
+const SRC_KIND=t=>{t=String(t||"");if(/pdf|manual|brochure|document/.test(t))return "Document";if(/image|drawing/.test(t))return "Spec sheet";if(/rental/.test(t))return "Rental catalog";if(/dealer|store/.test(t))return "Dealer";if(/report|press|article/.test(t))return "Article";return "Product page"};
+const cap=s=>String(s||"").replace(/_/g," ").replace(/^./,c=>c.toUpperCase());
+
+let DB=null, view="series", pageN=1, sortK="mfr", sortDir=1, filtered=[], brand=null, animateNext=true;
+const openSet=new Set();
+const st={q:"",format:new Set(),type:new Set(),squeeze:new Set(),cov:new Set(),mount:new Set(),fmin:null,fmax:null,tmax:null};
+const UNITS={dist:"both",weight:"kg",dim:"mm"};
+function store(k,v){try{localStorage.setItem("fdlc_"+k,JSON.stringify(v))}catch(e){}}
+function recall(k){try{const v=localStorage.getItem("fdlc_"+k);return v?JSON.parse(v):null}catch(e){return null}}
+
+/* ---------- data ---------- */
+function covTags(str,ic){
+  const t=new Set(), s=String(str||"");
+  if(/super\s*16|\bS16\b|\b16\s?mm\b/i.test(s)) t.add("S16");
+  if(/super\s*35|\bS35\b|35\s?mm/i.test(s)) t.add("S35");
+  if(/full\s*frame|\bFF\b|36\s*x\s*24/i.test(s)) t.add("FF");
+  if(/large\s*format|vista\s*vision|\bLF\b|\bVV\b|GFX|medium format/i.test(s)) t.add("LF");
+  if(/\b65\s?mm|alexa\s*65|\b65\b|system\s*65/i.test(s)) t.add("65");
+  if(ic){ if(ic<20)t.add("S16"); else if(ic<36)t.add("S35"); else if(ic<46)t.add("FF"); else if(ic<56)t.add("LF"); else t.add("65"); }
+  return t;
+}
+const byFocal=(a,b)=>(a.f0??1e9)-(b.f0??1e9)||(a.f1??0)-(b.f1??0)||(a.t??9)-(b.t??9);
+function normalize(raw){
+  const M=new Map(raw.manufacturers.map(m=>[m.stable_key,m]));
+  const S=new Map(raw.series.map(s=>[s.stable_key,s]));
+  const SRC=new Map((raw.sources||[]).map(s=>[s.source_id,s]));
+  const lenses=raw.definitions.map(d=>{
+    const s=S.get(d.series_key)||{display_name:d.series_key}, m=M.get(d.manufacturer_key)||{display_name:d.manufacturer_key,stable_key:d.manufacturer_key};
+    const mounts=(d.mounts&&d.mounts.length?d.mounts:(s.mounts||[]));
+    const ic=d.image_circle_mm??s.image_circle_mm??null, coverage=d.coverage??s.coverage??null, sq=d.squeeze_factor??s.squeeze_factor??null;
+    const f0=d.focal_length_mm??d.focal_from_mm??null, f1=d.focal_length_mm??d.focal_to_mm??f0;
+    const L={d,s,m,key:d.stable_key,mounts,ic,coverage,sq:sq!=null?+sq:null,f0,f1,
+      ana:(d.optical_format||s.optical_format)==="anamorphic",type:d.lens_type||s.lens_type,t:d.aperture_start??null,
+      mg:new Set(mounts.map(x=>MOUNT_ALIAS[x]||x)),cov:covTags(coverage,ic)};
+    L.hay=[m.display_name,(m.aliases||[]).join(" "),s.display_name,(s.aliases||[]).join(" "),d.display_name,d.variant,fmtFocal(L),fmtT(L),mounts.join(" ")].join(" ").toLowerCase();
+    return L;
+  });
+  const bySeries=new Map();
+  for(const L of lenses){(bySeries.get(L.d.series_key)||bySeries.set(L.d.series_key,[]).get(L.d.series_key)).push(L)}
+  for(const arr of bySeries.values()) arr.sort(byFocal);
+  let lo=Infinity,hi=0; for(const L of lenses){if(L.f0){lo=Math.min(lo,L.f0);hi=Math.max(hi,L.f1)}}
+  return {raw,M,S,SRC,lenses,bySeries,man:raw.manifest||{},fdom:[Math.max(1,lo*0.85),hi*1.15]};
+}
+
+/* ---------- format + units ---------- */
+const num=(v,d=2)=>v==null?"":(+v).toFixed(d).replace(/\.?0+$/,"");
+function fmtFocal(L){ if(L.f0==null)return "—"; return L.f0===L.f1?num(L.f0,1)+"mm":num(L.f0,1)+"–"+num(L.f1,1)+"mm"; }
+function fmtT(L){ const d=L.d; if(d.aperture_start==null)return ""; const u=d.aperture_unit||"T";
+  return d.aperture_end!=null&&d.aperture_end!==d.aperture_start?u+num(d.aperture_start)+"–"+num(d.aperture_end):u+num(d.aperture_start); }
+function ftin(m){ const tin=m/0.0254; let ft=Math.floor(tin/12), i=Math.round(tin-ft*12); if(i===12){ft++;i=0} return ft+"′"+i+"″"; }
+function uDist(m){ const a=num(m,3)+" m", b=ftin(m); return UNITS.dist==="m"?[a,null]:UNITS.dist==="ft"?[b,null]:[a,b]; }
+function uW(kg){ const a=num(kg,3)+" kg", b=num(kg*2.20462,2)+" lb"; return UNITS.weight==="kg"?[a,null]:UNITS.weight==="lb"?[b,null]:[a,b]; }
+function uDim(mm){ const a=num(mm,1)+" mm", b=num(mm/25.4,2)+" in"; return UNITS.dim==="mm"?[a,null]:UNITS.dim==="in"?[b,null]:[a,b]; }
+const html2=([a,b])=>esc(a)+(b?`<span class="sec">${esc(b)}</span>`:"");
+const txt2=([a,b])=>a+(b?" · "+b:"");
+function rangeFocal(arr){ const a=arr.filter(L=>L.f0!=null); if(!a.length)return "—"; const lo=Math.min(...a.map(L=>L.f0)),hi=Math.max(...a.map(L=>L.f1)); return lo===hi?num(lo,1)+"mm":num(lo,1)+"–"+num(hi,1)+"mm"; }
+function rangeT(arr){ const a=arr.filter(L=>L.t!=null); if(!a.length)return ""; const u=a[0].d.aperture_unit||"T"; const lo=Math.min(...a.map(L=>L.t)),hi=Math.max(...a.map(L=>L.t)); return lo===hi?u+num(lo):u+num(lo)+"–"+num(hi); }
+
+/* ---------- filter ---------- */
+function sqKey(sq){ if(sq==null)return "1"; const r=Math.round(sq*100)/100; if(Math.abs(r-1.33)<0.04)return "1.33"; if(Math.abs(r-1.8)<0.02)return "1.8"; return String(r); }
+function pass(L,skip){
+  if(st.q){ for(const w of st.q.split(/\s+/)) if(w&&!L.hay.includes(w)) return false; }
+  if(skip!=="brand"&&brand&&L.d.manufacturer_key!==brand)return false;
+  if(skip!=="format"&&st.format.size&&!st.format.has(L.ana?"anamorphic":"spherical"))return false;
+  if(skip!=="type"&&st.type.size&&!st.type.has(L.type))return false;
+  if(skip!=="squeeze"&&st.squeeze.size&&!st.squeeze.has(sqKey(L.sq)))return false;
+  if(skip!=="cov"&&st.cov.size&&![...st.cov].some(c=>L.cov.has(c)))return false;
+  if(skip!=="mount"&&st.mount.size&&![...st.mount].some(c=>L.mg.has(c)))return false;
+  if(st.fmin!=null&&(L.f1==null||L.f1<st.fmin))return false;
+  if(st.fmax!=null&&(L.f0==null||L.f0>st.fmax))return false;
+  if(st.tmax!=null&&(L.t==null||L.t>st.tmax+1e-9))return false;
+  return true;
+}
+function counts(skip,fn){ const c=new Map(); for(const L of DB.lenses){ if(!pass(L,skip))continue; for(const k of fn(L)) c.set(k,(c.get(k)||0)+1); } return c; }
+function chipGroup(el,key,items,cnt){
+  el.innerHTML=items.map(([v,label])=>{const n=cnt.get(v)||0,on=st[key].has(v);
+    return `<button type="button" class="chip" data-k="${key}" data-v="${esc(v)}" aria-pressed="${on}" ${!n&&!on?"disabled":""}>${esc(label)} <small>${n}</small></button>`}).join("");
+}
+function activeCount(){ let n=0; for(const k of ["type","squeeze","cov","mount"]) n+=st[k].size; if(st.fmin!=null)n++; if(st.fmax!=null)n++; if(st.tmax!=null)n++; return n; }
+function renderFilters(){
+  chipGroup($("#f-type"),"type",[["prime","Prime"],["zoom","Zoom"]],counts("type",L=>[L.type]));
+  const sqs=[...new Set(DB.lenses.map(L=>sqKey(L.sq)))].sort((a,b)=>+a-+b);
+  chipGroup($("#f-squeeze"),"squeeze",sqs.map(s=>[s,s==="1"?"None":s+"×"]),counts("squeeze",L=>[sqKey(L.sq)]));
+  chipGroup($("#f-cov"),"cov",COVS,counts("cov",L=>L.cov));
+  const allM=new Map(); for(const L of DB.lenses) for(const g of L.mg) allM.set(g,(allM.get(g)||0)+1);
+  chipGroup($("#f-mount"),"mount",[...allM.entries()].sort((a,b)=>b[1]-a[1]).map(([g])=>[g,MOUNT_LABEL[g]||g]),counts("mount",L=>L.mg));
+  const n=activeCount(), dot=$("#fdot"); if(String(n)!==dot.textContent||dot.hidden===!!n){dot.hidden=!n; dot.textContent=n;}
+}
+function renderBrands(){
+  const c=counts("brand",L=>[L.d.manufacturer_key]);
+  const sc=new Map(); for(const L of DB.lenses) if(pass(L,"brand")){const k=L.d.manufacturer_key;(sc.get(k)||sc.set(k,new Set()).get(k)).add(L.d.series_key)}
+  const q=$("#bq").value.trim().toLowerCase();
+  const list=[...DB.M.values()].filter(m=>DB.lenses.some(L=>L.d.manufacturer_key===m.stable_key))
+    .filter(m=>!q||(m.display_name+" "+(m.aliases||[]).join(" ")).toLowerCase().includes(q))
+    .sort((a,b)=>a.display_name.localeCompare(b.display_name));
+  $("#blist").innerHTML=list.map(m=>{const n=c.get(m.stable_key)||0,s=sc.get(m.stable_key)?.size||0;
+    return `<button type="button" class="bitem ${!n?"zero":""}" data-brand="${esc(m.stable_key)}" aria-current="${brand===m.stable_key}">${esc(m.display_name)}<small>${s} · ${n}</small></button>`}).join("")||`<div style="padding:6px 8px;color:var(--fg-3)">No brand matches</div>`;
+  $("#allb").setAttribute("aria-pressed",!brand);
+  $("#blabel").textContent=brand&&DB.M.get(brand)?DB.M.get(brand).display_name:"All brands";
+  let tot=0; for(const v of c.values()) tot+=v; $("#allcount").textContent=tot.toLocaleString("en");
+}
+
+/* ---------- ruler + card ---------- */
+const TICKS=[2,4,8,12,18,25,35,50,75,100,150,200,300,500,1000,1500];
+function ruler(arr,ana){
+  const [a,b]=DB.fdom, la=Math.log(a), lb=Math.log(b), x=f=>((Math.log(f)-la)/(lb-la)*100).toFixed(2)+"%";
+  let h=TICKS.filter(t=>t>=a&&t<=b).map(t=>`<span class="tk" style="left:${x(t)}"></span><span class="tl" style="left:${x(t)}">${t}</span>`).join("");
+  let j=0;
+  for(const L of arr){ if(L.f0==null)continue; const tip=esc(L.d.display_name+" · "+fmtFocal(L)+" "+fmtT(L));
+    h+=L.f0===L.f1?`<span class="pt" style="left:${x(L.f0)};--j:${j++}" title="${tip}" data-open="${esc(L.key)}"></span>`
+      :`<span class="zb" style="left:${x(L.f0)};width:calc(${x(L.f1)} - ${x(L.f0)})" title="${tip}" data-open="${esc(L.key)}"></span>`; }
+  return `<div class="ruler ${ana?"ana":""}" aria-hidden="true">${h}</div>`;
+}
+const NA='<td class="num na">—</td>';
+const cell=(v,f,c)=>v==null?NA:`<td class="num m${c?" "+c:""}">${html2(f(v))}</td>`;
+function lensCells(L){ const d=L.d;
+  return cell(d.minimum_focus_m,uDist,"c-cf")+cell(d.front_diameter_mm,uDim,"c-fr")+cell(d.weight_kg,uW,"c-w")+cell(d.length_mm,uDim,"c-l")+cell(L.ic,uDim)+
+    `<td class="m">${esc(L.mounts.join(", "))||'<span class="na">—</span>'}</td>`; }
+const LENS_TH=`<th class="num c-cf">CF</th><th class="num c-fr">Front Ø</th><th class="num c-w">Weight</th><th class="num c-l">Length</th><th class="num">Image circle</th><th>Mount</th>`;
+function card(k,arr){
+  const s=arr[0].s, all=DB.bySeries.get(k)||arr, ana=arr[0].ana, cov=s.coverage||arr[0].coverage;
+  const top=""; /* coverage / image-circle / relationship badges removed, as in the apps */
+  return `<div class="scard">${top?`<div class="top">${top}</div>`:""}
+    ${ruler(all,ana)}
+    <div class="tscroll"><table><thead><tr><th>Focal</th><th>Aperture</th>${LENS_TH}</tr></thead><tbody>
+    ${arr.map(L=>`<tr data-open="${esc(L.key)}"><td class="lens"><b>${esc(fmtFocal(L))}</b></td><td class="m">${esc(fmtT(L))||'<span class="na">—</span>'}</td>${lensCells(L)}</tr>`).join("")}
+    </tbody></table></div></div>`;
+}
+let seriesMap=new Map();
+
+/* ---------- main render ---------- */
+function renderBars(){
+  const sph=filtered.filter(L=>!L.ana).length, ana=filtered.length-sph, tot=filtered.length||1;
+  const ser=f=>new Set(filtered.filter(f).map(L=>L.d.series_key)).size;
+  const rows=[["Total","",filtered.length,"var(--fg-2)",ser(()=>true)],["Spherical","c-a",sph,"var(--sph-mark)",ser(L=>!L.ana)],["Anamorphic","c-b",ana,"var(--ana-mark)",ser(L=>L.ana)]];
+  const el=$("#bars");
+  if(!el.children.length) el.innerHTML=rows.map(r=>`<span class="${r[1]}">${r[0]}</span><span></span><span class="track"><i style="width:0;background:${r[3]}"></i></span><span></span>`).join("");
+  rows.forEach((r,i)=>{const c=el.children; c[i*4+1].textContent=`${r[2].toLocaleString("en")} (${Math.round(r[2]/tot*100)}%)`; c[i*4+3].textContent=r[4]+" series";
+    requestAnimationFrame(()=>{c[i*4+2].firstChild.style.width=(r[2]/tot*100)+"%"})});
+}
+function render(){
+  filtered=DB.lenses.filter(L=>pass(L));
+  renderFilters(); renderBrands(); renderBars();
+  const out=$("#out"), sk=new Set(filtered.map(L=>L.d.series_key));
+  const bm=brand&&DB.M.get(brand);
+  $("#title").textContent=bm?bm.display_name:"Lens Catalog";
+  $("#sub").textContent=`${sk.size} / ${new Set(DB.lenses.filter(L=>!brand||L.d.manufacturer_key===brand).map(L=>L.d.series_key)).size} series · ${filtered.length.toLocaleString("en")} lenses`;
+  const anim=animateNext; animateNext=false;
+  const en=i=>anim&&i>=0&&i<14?` enter" style="--i:${i}`:"";
+  if(!filtered.length){out.innerHTML=`<div class="empty">No lenses match. Remove a filter or <button type="button" class="btn" data-act="reset">reset all</button></div>`;return}
+
+  if(view==="series"){
+    seriesMap=new Map(); for(const L of filtered){(seriesMap.get(L.d.series_key)||seriesMap.set(L.d.series_key,[]).get(L.d.series_key)).push(L)}
+    const brands=new Map(); for(const [k,arr] of seriesMap){const b=arr[0].d.manufacturer_key;(brands.get(b)||brands.set(b,[]).get(b)).push(k)}
+    const bkeys=[...brands.keys()].sort((a,b)=>(DB.M.get(a)?.display_name||a).localeCompare(DB.M.get(b)?.display_name||b));
+    if(seriesMap.size===1) openSet.add([...seriesMap.keys()][0]);
+    const limit=brand?Infinity:pageN*12;
+    let h="";
+    bkeys.slice(0,limit).forEach((b,bi)=>{
+      const m=DB.M.get(b)||{display_name:b}, keys=brands.get(b).sort((x,y)=>(DB.S.get(x)?.display_name||x).localeCompare(DB.S.get(y)?.display_name||y));
+      const nl=keys.reduce((n,k)=>n+seriesMap.get(k).length,0), na=keys.filter(k=>seriesMap.get(k)[0].ana).length;
+      h+=`<section class="block${en(bi-(pageN-1)*12)}"><div class="bhead"><h2>${esc(m.display_name)}</h2><span class="cnt">${keys.length} series</span><span class="meta">${nl} lenses</span>
+        <span class="right">${keys.length-na?`<span class="pill a">${keys.length-na} sph</span>`:""}${na?`<span class="pill b">${na} ana</span>`:""}</span></div>
+        <div class="tbox"><div class="tscroll"><table><thead><tr><th>Series</th><th>Type</th><th>Format</th><th class="num">Lenses</th><th>Focal range</th><th>Aperture</th><th>Mounts</th></tr></thead><tbody>`;
+      for(const k of keys){
+        const arr=seriesMap.get(k).sort(byFocal), s=arr[0].s, all=DB.bySeries.get(k)||arr, ana=arr[0].ana, isOpen=openSet.has(k);
+        const sqs=[...new Set(all.map(L=>L.sq).filter(x=>x))];
+        const mounts=[...new Set(all.flatMap(L=>L.mounts))];
+        h+=`<tr class="srow" data-series="${esc(k)}" aria-expanded="${isOpen}" tabindex="0">
+          <td class="name"><span class="caret">›</span> ${esc(s.display_name||k)}${(s.aliases||[]).length?`<small>${esc(s.aliases[0])}</small>`:""}</td>
+          <td>${esc(cap(s.lens_type||arr[0].type))}</td>
+          <td>${ana?`<span class="pill b">Ana${sqs.length?" "+sqs.map(x=>num(x)+"×").join("/"):""}</span>`:`<span class="pill a">Sph</span>`}</td>
+          <td class="num"><span class="nbox">${arr.length<all.length?arr.length+"/"+all.length:all.length}</span></td>
+          <td class="m">${esc(rangeFocal(arr))}</td><td class="m">${esc(rangeT(arr))||'<span class="na">—</span>'}</td>
+          <td>${mounts.slice(0,4).map(x=>`<span class="pill m">${esc(x)}</span>`).join(" ")}${mounts.length>4?` <span class="na">+${mounts.length-4}</span>`:""}${mounts.length?"":'<span class="na">—</span>'}</td></tr>`;
+        if(isOpen) h+=cardRow(k,arr,true);
+      }
+      h+=`</tbody></table></div></div></section>`;
+    });
+    if(bkeys.length>limit) h+=`<button type="button" class="btn more" data-act="more">Show more brands (${bkeys.length-limit} left)</button>`;
+    out.innerHTML=h; watchMore();
+  } else {
+    const key={mfr:L=>L.m.display_name+"|"+(L.s.display_name||"")+"|"+String(L.f0??0).padStart(7,"0"),
+      focal:L=>L.f0??1e9,t:L=>L.t??99,mfd:L=>L.d.minimum_focus_m??1e9,front:L=>L.d.front_diameter_mm??1e9,w:L=>L.d.weight_kg??1e9,len:L=>L.d.length_mm??1e9,ic:L=>L.ic??1e9}[sortK];
+    const rows=[...filtered].sort((a,b)=>{const A=key(a),B=key(b);return (A<B?-1:A>B?1:0)*sortDir});
+    const th=(k,l,n)=>`<th class="sort ${n?"num":""}" data-sort="${k}" ${sortK===k?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}>${l}</th>`;
+    const lim=pageN*200;
+    out.innerHTML=`<div class="tbox${en(0)}"><div class="tscroll"><table><thead><tr>${th("mfr","Brand")}<th>Series</th>${th("focal","Focal")}${th("t","Aperture")}<th>Format</th>${th("mfd","Close focus",1)}${th("front","Front Ø",1)}${th("w","Weight",1)}${th("len","Length",1)}${th("ic","Image circle",1)}<th>Mount</th></tr></thead><tbody>`+
+      rows.slice(0,lim).map(L=>`<tr data-open="${esc(L.key)}"><td>${esc(L.m.display_name)}</td><td>${esc(L.s.display_name)}</td><td class="m"><b>${esc(fmtFocal(L))}</b></td><td class="m">${esc(fmtT(L))||'<span class="na">—</span>'}</td><td>${L.ana?`<span class="pill b">${L.sq?num(L.sq)+"×":"Ana"}</span>`:'<span class="pill a">Sph</span>'}</td>${lensCells(L)}</tr>`).join("")+
+      `</tbody></table></div></div>`+(rows.length>lim?`<button type="button" class="btn more" data-act="more">Show 200 more (${rows.length-lim} left)</button>`:"");
+    watchMore();
+  }
+}
+/* infinite scroll: load the next page when the "more" button nears the viewport */
+let loadingMore=false;
+const moreIO="IntersectionObserver" in window?new IntersectionObserver(ents=>{
+  if(loadingMore||!ents.some(e=>e.isIntersecting))return;
+  loadingMore=true; const b=document.querySelector('[data-act="more"]'); if(b){b.disabled=true;b.textContent="Loading more…"}
+  setTimeout(()=>{pageN++;animateNext=true;render();loadingMore=false},180);
+},{rootMargin:"0px 0px 500px 0px"}):null;
+function watchMore(){ if(!moreIO)return; moreIO.disconnect(); const b=document.querySelector('[data-act="more"]'); if(b)moreIO.observe(b); }
+function cardRow(k,arr,open){ return `<tr class="card" data-card="${esc(k)}"><td colspan="7"><div class="collapse${open?" open":""}"><div><div>${card(k,arr)}</div></div></div></td></tr>`; }
+function toggleSeries(row){
+  const k=row.dataset.series, next=row.nextElementSibling;
+  if(openSet.has(k)){
+    openSet.delete(k); row.setAttribute("aria-expanded","false");
+    if(next&&next.dataset.card===k){const c=next.querySelector(".collapse"); c.classList.remove("open"); setTimeout(()=>{if(!openSet.has(k))next.remove()},330);}
+  } else {
+    openSet.add(k); row.setAttribute("aria-expanded","true");
+    if(!(next&&next.dataset.card===k)){ const arr=(seriesMap.get(k)||DB.bySeries.get(k)).slice().sort(byFocal); row.insertAdjacentHTML("afterend",cardRow(k,arr,false)); }
+    const c=row.nextElementSibling.querySelector(".collapse"); requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.add("open")));
+  }
+}
+
+/* ---------- detail sheet ---------- */
+const SPEC=[
+  ["Focal length",L=>fmtFocal(L)],
+  ["Max aperture",L=>fmtT(L)],
+  ["Min aperture",L=>L.d.minimum_aperture!=null?(L.d.aperture_unit||"T")+num(L.d.minimum_aperture):""],
+  ["Aperture mode",L=>L.d.aperture_mode&&L.d.aperture_mode!=="unknown"?cap(L.d.aperture_mode):""],
+  ["Optics",L=>(L.ana?"Anamorphic":"Spherical")+" "+(L.type||"")],
+  ["Squeeze",L=>L.sq?num(L.sq)+"×":""],
+  ["Coverage",L=>L.coverage||""],
+  ["Image circle",L=>L.ic!=null?txt2(uDim(L.ic)):""],
+  ["Close focus",L=>L.d.minimum_focus_m!=null?txt2(uDist(L.d.minimum_focus_m)):""],
+  ["Front diameter",L=>L.d.front_diameter_mm!=null?txt2(uDim(L.d.front_diameter_mm)):""],
+  ["Filter thread",L=>L.d.filter_thread_mm!=null?"M"+num(L.d.filter_thread_mm,1):(["explicit_none","none"].includes(L.d.filter_thread_status)?"None":L.d.filter_thread_status==="not_applicable"?"Not applicable":"")],
+  ["Weight",L=>L.d.weight_kg!=null?txt2(uW(L.d.weight_kg)):""],
+  ["Length",L=>L.d.length_mm!=null?txt2(uDim(L.d.length_mm)):""],
+  ["Iris blades",L=>L.d.iris_blades!=null?String(L.d.iris_blades):""],
+  ["Mount",L=>L.mounts.join(", ")],
+];
+let sheetKey=null;
+function openSheet(key){
+  const L=DB.lenses.find(x=>x.key===key); if(!L)return; sheetKey=key;
+  const d=L.d, s=L.s, root=$("#sheet-root"), had=!!root.querySelector(".sheet")&&!root.classList.contains("closing");
+  root.classList.remove("closing");
+  const sib=DB.bySeries.get(d.series_key)||[L];
+  const ids=[...new Set([...(d.source_ids||[]),...(d.enrichment_source_ids||[]),...(s.source_ids||[])])];
+  const big=[["Focal",fmtFocal(L)],["Aperture",fmtT(L)||"—"],["Close focus",d.minimum_focus_m!=null?uDist(d.minimum_focus_m)[0]:"—"],["Weight",d.weight_kg!=null?uW(d.weight_kg)[0]:"—"]];
+  const srcHtml=ids.map(id=>{const r=DB.SRC.get(id); if(!r)return "";
+    const u=r.url_or_reference||""; let host=""; try{host=new URL(u).hostname.replace(/^www\./,"")}catch(e){}
+    const kind=SRC_KIND(r.type);
+    const inner=`<span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${/Document|Spec/.test(kind)?'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>':'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'}</svg></span>
+      <span class="tx"><b>${esc(r.publisher||host||"Source")}</b><small>${esc(kind)}${host?" · "+esc(host):""}</small></span>`;
+    return host?`<a class="src" href="${esc(u)}" target="_blank" rel="noopener" title="${esc(r.name)}">${inner}<span class="go">Open <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a>`:`<div class="src" title="${esc(r.name)}">${inner}</div>`;}).join("");
+  root.innerHTML=`<div class="scrim" data-act="close" ${had?'style="animation:none"':""}></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(L.m.display_name+" "+(s.display_name||"")+" "+d.display_name)}" ${had?'style="animation:none"':""}>
+    <button type="button" class="btn close" data-act="close">Close</button>
+    <div class="eyebrow">${esc(L.m.display_name)}</div>
+    <h2>${esc(s.display_name||d.series_key)} ${esc(fmtFocal(L))}</h2>
+    ${d.variant?`<div class="sub">${esc(d.variant)}</div>`:""}
+    <div class="big">${big.map(([a,b],i)=>`<div style="--i:${i}">${a}<b title="${esc(b)}">${esc(b)}</b></div>`).join("")}</div>
+    ${sib.length>1?`<h3>In this series</h3><div class="sibs">${sib.map(x=>`<button type="button" data-open="${esc(x.key)}" ${x.key===key?'aria-current="true"':""}>${esc(fmtFocal(x).replace("mm",""))}</button>`).join("")}</div>`:""}
+    <h3>Specifications</h3>
+    <dl class="spec">${SPEC.map(([lab,fn])=>{const v=fn(L);return `<dt>${lab}</dt>`+(v?`<dd>${esc(v)}</dd>`:`<dd class="na">Not published</dd>`)}).join("")}</dl>
+    ${d.notes?`<h3>Notes</h3><p class="note">${esc(d.notes)}</p>`:""}
+    ${srcHtml?`<h3>Sources</h3><div class="srcs">${srcHtml}</div>`:""}
+  </div>`;
+  if(!had) root.querySelector(".close").focus();
+}
+function closeLayer(id){ const r=$(id); if(!r.firstChild||r.classList.contains("closing"))return; r.classList.add("closing"); setTimeout(()=>{if(r.classList.contains("closing")){r.innerHTML="";r.classList.remove("closing")}},220); }
+const closeSheet=()=>{sheetKey=null;closeLayer("#sheet-root")};
+
+/* ---------- settings ---------- */
+const PREFS=[["dist","Close focus",[["m","Metric"],["ft","Imperial"],["both","Both"]],{m:"0.45 m",ft:"1′6″",both:"0.45 m · 1′6″"}],
+  ["weight","Weight",[["kg","kg"],["lb","lb"],["both","Both"]],{kg:"2.8 kg",lb:"6.17 lb",both:"2.8 kg · 6.17 lb"}],
+  ["dim","Length, front Ø, image circle",[["mm","mm"],["in","inch"],["both","Both"]],{mm:"110 mm",in:"4.33 in",both:"110 mm · 4.33 in"}]];
+function openSettings(){
+  const r=$("#pop-root"); if(r.firstChild&&!r.classList.contains("closing")){closeSettings();return}
+  r.classList.remove("closing");
+  $("#gear").setAttribute("aria-expanded","true");
+  r.innerHTML=`<div class="pop-wrap" data-act="closepop"><div class="popover" role="dialog" aria-label="Settings">
+    <h3>Settings</h3><p>Preferred units for lens specifications.</p>
+    ${PREFS.map(([k,lab,opts,ex])=>`<div class="pref"><div class="fl">${lab}<em id="ex-${k}">${ex[UNITS[k]]}</em></div>
+      <div class="seg" role="group" aria-label="${lab}"><span class="glider"></span>${opts.map(([v,l])=>`<button type="button" data-unit="${k}" data-val="${v}" aria-pressed="${UNITS[k]===v}">${l}</button>`).join("")}</div></div>`).join("")}
+    <div class="adv"><button type="button" class="advbtn" id="advbtn" aria-expanded="false"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg>Advanced</button>
+      <div class="collapse" id="advcol"><div><div class="advbody">
+        <div>Catalog version <b>${esc(CATVER)}</b></div>
+        <div>Catalog data as of <b id="asof">${esc(ASOF)}</b></div>
+        <div style="margin-top:8px"><button type="button" class="btn" data-act="lockout">Sign out on this device</button></div>
+      </div></div></div></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:10px"><button type="button" class="btn primary" data-act="closepop2">Done</button></div>
+  </div></div>`;
+  r.querySelectorAll(".seg").forEach(g=>glide(g,true));
+  $("#advbtn").addEventListener("click",e=>{const c=$("#advcol");c.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",c.classList.contains("open"))});
+}
+function closeSettings(){ $("#gear").setAttribute("aria-expanded","false"); closeLayer("#pop-root"); }
+
+function glide(seg,instant){ if(!seg)return; const g=seg.querySelector(".glider"), on=seg.querySelector('button[aria-pressed="true"]'); if(!g||!on)return;
+  if(instant)g.style.transition="none"; g.style.left=on.offsetLeft+"px"; g.style.width=on.offsetWidth+"px"; if(instant){void g.offsetWidth; g.style.transition=""} }
+
+/* ---------- events ---------- */
+function saveState(){ store("st3",{q:st.q,format:[...st.format],type:[...st.type],squeeze:[...st.squeeze],cov:[...st.cov],mount:[...st.mount],fmin:st.fmin,fmax:st.fmax,tmax:st.tmax,brand,view}); }
+function rerender(anim){ pageN=1; animateNext=!!anim; saveState(); render(); }
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-k],[data-open],[data-act],[data-sort],[data-brand],[data-series],[data-unit]"); if(!t)return;
+  if(t.dataset.unit){UNITS[t.dataset.unit]=t.dataset.val; store("units",UNITS);
+    t.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===t)); glide(t.parentElement);
+    const p=PREFS.find(x=>x[0]===t.dataset.unit); $("#ex-"+p[0]).textContent=p[3][UNITS[p[0]]];
+    render(); if(sheetKey)openSheet(sheetKey); return}
+  if(t.dataset.k){const set=st[t.dataset.k],v=t.dataset.v; set.has(v)?set.delete(v):set.add(v); rerender(); return}
+  if(t.dataset.open){openSheet(t.dataset.open);return}
+  if(t.dataset.series){toggleSeries(t);return}
+  if(t.dataset.brand){closeBrands(); brand=brand===t.dataset.brand?null:t.dataset.brand; openSet.clear(); rerender(true); window.scrollTo({top:0,behavior:"smooth"}); return}
+  if(t.dataset.sort){const k=t.dataset.sort; if(sortK===k)sortDir*=-1; else {sortK=k;sortDir=1} render(); return}
+  const a=t.dataset.act;
+  if(a==="more"){pageN++;animateNext=true;render()} else if(a==="close")closeSheet(); else if(a==="reset")resetAll();
+  else if(a==="closepop2"||(a==="closepop"&&e.target===t))closeSettings();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ if(!$("#bdrop").hidden)closeBrands(); else if($("#pop-root").firstChild)closeSettings(); else closeSheet(); }
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches("tr.srow")){e.preventDefault();toggleSeries(e.target)}
+});
+$("#gear").addEventListener("click",openSettings);
+$("#allb").addEventListener("click",()=>{closeBrands();brand=null;openSet.clear();rerender(true)});
+$("#bq").addEventListener("input",renderBrands);
+let qT; $("#q").addEventListener("input",e=>{clearTimeout(qT);qT=setTimeout(()=>{st.q=e.target.value.trim().toLowerCase();rerender()},160)});
+$("#fmt").addEventListener("change",e=>{st.format.clear(); if(e.target.value)st.format.add(e.target.value); rerender(true)});
+$("#ftog").addEventListener("click",e=>{const c=$("#fcol");c.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",c.classList.contains("open"))});
+function openBrands(){ const d=$("#bdrop"); d.classList.remove("closing"); d.hidden=false; $("#bbtn").setAttribute("aria-expanded","true");
+  const cur=d.querySelector('.bitem[aria-current="true"]'); if(cur){const l=$("#blist");l.style.scrollBehavior="auto";l.scrollTop=cur.offsetTop-l.offsetTop-62;l.style.scrollBehavior=""}
+  setTimeout(()=>$("#bq").focus(),30); }
+function closeBrands(){ const d=$("#bdrop"); if(d.hidden||d.classList.contains("closing"))return; $("#bbtn").setAttribute("aria-expanded","false");
+  d.classList.add("closing"); setTimeout(()=>{if(d.classList.contains("closing")){d.hidden=true;d.classList.remove("closing")}},160); }
+$("#bbtn").addEventListener("click",()=>{ $("#bdrop").hidden||$("#bdrop").classList.contains("closing")?openBrands():closeBrands(); });
+document.addEventListener("pointerdown",e=>{ if(!e.target.closest("#bwrap"))closeBrands(); });
+const numIn=(id,k)=>$(id).addEventListener("input",e=>{const v=parseFloat(e.target.value);st[k]=isFinite(v)?v:null;clearTimeout(qT);qT=setTimeout(rerender,220)});
+numIn("#fmin","fmin"); numIn("#fmax","fmax");
+$("#tmax").addEventListener("change",e=>{st.tmax=e.target.value?parseFloat(e.target.value):null;rerender()});
+function syncInputs(){ $("#q").value=st.q; $("#fmin").value=st.fmin??""; $("#fmax").value=st.fmax??""; $("#tmax").value=st.tmax!=null?String(st.tmax):""; $("#fmt").value=[...st.format][0]||"";
+  $("#v-series").setAttribute("aria-pressed",view==="series"); $("#v-lenses").setAttribute("aria-pressed",view==="lenses"); glide($("#viewseg")); }
+function resetAll(){ st.q="";["format","type","squeeze","cov","mount"].forEach(k=>st[k].clear()); st.fmin=st.fmax=st.tmax=null; syncInputs(); rerender(true); }
+$("#reset").addEventListener("click",resetAll);
+function setView(v){view=v;syncInputs();rerender(true)}
+$("#v-series").addEventListener("click",()=>setView("series"));
+$("#v-lenses").addEventListener("click",()=>setView("lenses"));
+$("#copy").addEventListener("click",async e=>{
+  const head=["Brand","Series","Lens","Variant","Focal from (mm)","Focal to (mm)","Aperture","Format","Squeeze","Coverage","Image circle (mm)","Close focus (m)","Front diameter (mm)","Filter thread (mm)","Weight (kg)","Length (mm)","Iris blades","Mounts"];
+  const clean=v=>String(v??"").replace(/[\t\n\r]+/g," ");
+  const text=[head.join("\t")].concat(filtered.map(L=>[L.m.display_name,L.s.display_name,L.d.display_name,L.d.variant,L.f0,L.f1,fmtT(L),L.ana?"Anamorphic":"Spherical",L.sq,L.coverage,L.ic,L.d.minimum_focus_m,L.d.front_diameter_mm,L.d.filter_thread_mm,L.d.weight_kg,L.d.length_mm,L.d.iris_blades,L.mounts.join(", ")].map(clean).join("\t"))).join("\n");
+  const lab=e.currentTarget.querySelector("span"), old=lab.textContent;
+  try{await navigator.clipboard.writeText(text);lab.textContent=`Copied ${filtered.length} rows`}
+  catch(err){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}ta.remove();lab.textContent=ok?`Copied ${filtered.length} rows`:"Copy blocked"}
+  setTimeout(()=>lab.textContent=old,2200);
+});
+
+/* ---------- theme ---------- */
+function applyTheme(t,anim){ const r=document.documentElement;
+  if(anim){r.classList.add("theme-anim"); setTimeout(()=>r.classList.remove("theme-anim"),420);}
+  if(t==="light"||t==="dark")r.setAttribute("data-theme",t); else r.removeAttribute("data-theme");
+  document.querySelectorAll("[data-theme-set]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.themeSet===(t||"system"))); glide($("#themeseg"),!anim); }
+document.querySelectorAll("[data-theme-set]").forEach(b=>b.addEventListener("click",()=>{const t=b.dataset.themeSet;applyTheme(t,true);store("theme",t)}));
+window.addEventListener("resize",()=>document.querySelectorAll(".seg").forEach(s=>glide(s,true)));
+
+/* ---------- load ---------- */
+let ASOF="—", LOADMSG="";
+function boot(raw,local){
+  DB=normalize(raw); if(brand&&!DB.M.has(brand))brand=null;
+  ASOF=(DB.man.retrieval_date||"—")+(local?" (local file)":""); const a=$("#asof"); if(a)a.textContent=ASOF;
+  animateNext=true; render();
+}
+const sv=recall("st3"); if(sv){ for(const k of ["format","type","squeeze","cov","mount"]) st[k]=new Set(sv[k]||[]); st.q=sv.q||""; st.fmin=sv.fmin??null; st.fmax=sv.fmax??null; st.tmax=sv.tmax??null; brand=sv.brand||null; view=sv.view==="lenses"?"lenses":"series"; }
+const su=recall("units"); if(su) for(const k in UNITS) if(su[k]) UNITS[k]=su[k];
+applyTheme(recall("theme")||"system",false);
+syncInputs();
+if(document.fonts) document.fonts.ready.then(()=>document.querySelectorAll(".seg").forEach(s=>glide(s,true)));
+/* ---------- encrypted catalog (same source as the native apps) ---------- */
+const WRAP={"salt": "r7m7bDQDYvfHxC7SE7CUmg==", "iv": "slu0eNW5plNMVPbw", "ct": "lhk+Uwor/dBZkzr9Tz6ptoORc7nqUNI6i2ynZL/HKMfBghbpK9Ri9S05qIQCvo7u", "iter": 600000};          // catalog key, sealed with the site password (PBKDF2 → AES-GCM)
+let CATVER="—", catKey=null, curRev=0, curFP=null;
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+async function unwrap(pw){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+  const k=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(WRAP.salt),iterations:WRAP.iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+  return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(WRAP.iv)},k,b64(WRAP.ct)));
+}
+async function importCat(raw){ return crypto.subtle.importKey("raw",raw,"AES-GCM",false,["decrypt"]); }
+async function openBlob(buf){
+  const u=new Uint8Array(buf);
+  if(u.length<41||String.fromCharCode(...u.slice(0,4))!=="FDLC"||u[4]!==1) throw new Error("not a catalog file");
+  let rev=0n; for(let i=5;i<13;i++) rev=(rev<<8n)|BigInt(u[i]);
+  const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:u.slice(13,25),additionalData:u.slice(0,13)},catKey,u.slice(25));
+  const txt=await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+  return {raw:JSON.parse(txt),rev:Number(rev)};
+}
+async function fetchBin(p){ const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok)throw new Error("HTTP "+r.status); return r.arrayBuffer(); }
+async function fetchJSON(p){ const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"}); if(!r.ok)throw new Error("HTTP "+r.status); return r.json(); }
+
+/* fingerprint of the catalog, kept between visits to show what changed */
+async function fingerprint(raw){
+  const enc=new TextEncoder(), lens={};
+  for(const d of raw.definitions){ const h=await crypto.subtle.digest("SHA-1",enc.encode(JSON.stringify(d))); lens[d.stable_key]=hex(h).slice(0,10); }
+  const withLenses=new Set(raw.definitions.map(d=>d.manufacturer_key));
+  return {lens,series:raw.series.map(s=>s.stable_key),brands:raw.manufacturers.filter(m=>withLenses.has(m.stable_key)).map(m=>[m.stable_key,m.display_name])};
+}
+function diffFP(o,n,man){
+  const ok=Object.keys(o.lens), nk=Object.keys(n.lens), os=new Set(o.series), ns=new Set(n.series), ob=new Set(o.brands.map(b=>b[0]));
+  const d={version:man.catalog_version||null,date:man.retrieval_date||null,total:nk.length,
+    added:nk.filter(k=>!(k in o.lens)).length, removed:ok.filter(k=>!(k in n.lens)).length,
+    changed:nk.filter(k=>k in o.lens&&o.lens[k]!==n.lens[k]).length,
+    sAdded:n.series.filter(k=>!os.has(k)).length, sRemoved:o.series.filter(k=>!ns.has(k)).length,
+    brands:n.brands.filter(b=>!ob.has(b[0])).map(b=>b[1]).sort()};
+  return d.added+d.removed+d.changed+d.sAdded+d.sRemoved+d.brands.length?d:null;
+}
+function renderNotice(){
+  const slot=$("#updslot"), n=recall("notice"); if(!slot)return;
+  if(!n){slot.innerHTML="";return}
+  const L=x=>x+" "+(x===1?"lens":"lenses"), ch=[];
+  if(n.added)ch.push(["n","+"+L(n.added)]); if(n.sAdded)ch.push(["n","+"+n.sAdded+" series"]);
+  n.brands.slice(0,3).forEach(b=>ch.push(["n","new brand: "+b])); if(n.brands.length>3)ch.push(["n","+"+(n.brands.length-3)+" more brands"]);
+  if(n.changed)ch.push(["u",n.changed.toLocaleString()+" updated"]); if(n.removed)ch.push(["r","−"+L(n.removed)]); if(n.sRemoved)ch.push(["r","−"+n.sRemoved+" series"]);
+  slot.innerHTML=`<div class="upd" role="status"><div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8"/><path d="M21 4v5h-5M3 20v-5h5"/></svg></div>
+    <div class="tx"><h4>Catalog updated${n.version?`<span class="ver">${esc(n.version)}</span>`:""}${n.date?`<span class="dt">${esc(n.date)}</span>`:""}</h4>
+    <div class="chips">${ch.map(([c,t])=>`<span class="chip ${c}">${esc(t)}</span>`).join("")}</div>
+    <div class="tot">${n.total.toLocaleString()} lenses in the catalog now</div></div>
+    <button type="button" class="x" id="updx" aria-label="Close" title="Close"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`;
+  $("#updx").addEventListener("click",()=>{const b=slot.firstChild;b.classList.add("out");setTimeout(()=>{store("notice",null);try{localStorage.removeItem("fdlc_notice")}catch(e){}renderNotice()},240)});
+}
+
+async function loadLatest(){
+  const man=await fetchJSON("manifest.json");
+  if(man.revision===curRev) return;                 // nothing new
+  const {raw,rev}=await openBlob(await fetchBin("catalog.enc"));
+  CATVER=raw.manifest&&raw.manifest.catalog_version||man.version||"—";
+  const fp=await fingerprint(raw), prev=recall("fp");
+  if(prev&&prev.rev!==rev){ const d=diffFP(prev,fp,raw.manifest||{}); if(d){store("notice",d)} }
+  store("fp",Object.assign(fp,{rev}));
+  curRev=rev; boot(raw,false); renderNotice();
+}
+function startUpdates(){
+  setInterval(()=>loadLatest().catch(()=>{}),4*3600*1000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadLatest().catch(()=>{})});
+}
+
+/* lock screen: the password unlocks the catalog key; remembered on this device */
+function lockScreen(msg){
+  const logo=document.querySelector(".lockup img").src;
+  const el=document.createElement("div"); el.className="lock";
+  el.innerHTML=`<form autocomplete="on"><div class="lk"><img src="${logo}" alt=""><div><b>filmdood</b><span>Lens Catalog</span></div></div>
+    <input type="password" id="pw" placeholder="Password" autocomplete="current-password" required autofocus>
+    <label><input type="checkbox" id="rem" checked> Remember on this device</label>
+    <div class="err" id="pwerr">${esc(msg||"")}</div><button type="submit">Open catalog</button></form>`;
+  document.body.appendChild(el);
+  el.querySelector("form").addEventListener("submit",async e=>{e.preventDefault();
+    const btn=el.querySelector("button"); btn.disabled=true; btn.textContent="Opening…";
+    try{ const raw=await unwrap(el.querySelector("#pw").value);
+      if(el.querySelector("#rem").checked) store("k",hex(raw));
+      catKey=await importCat(raw); el.remove(); await loadLatest(); startUpdates();
+    }catch(err){ el.querySelector("#pwerr").textContent=catKey?"The catalog could not be loaded.":"Wrong password."; btn.disabled=false; btn.textContent="Open catalog"; }
+  });
+}
+document.addEventListener("click",e=>{ if(e.target.closest('[data-act="lockout"]')){ try{localStorage.removeItem("fdlc_k")}catch(_){} location.reload(); } });
+
+(async()=>{
+  const saved=recall("k");
+  if(saved){ try{ catKey=await importCat(Uint8Array.from(saved.match(/../g).map(h=>parseInt(h,16)))); await loadLatest(); startUpdates(); return; }catch(e){ try{localStorage.removeItem("fdlc_k")}catch(_){} catKey=null; } }
+  if(!WRAP){ $("#out").innerHTML=`<div class="empty">This page is not set up yet.</div>`; return; }
+  $("#out").innerHTML=`<div class="loading">Locked</div>`;
+  lockScreen();
+})();
+})();
+</script>
+
+</body></html>
