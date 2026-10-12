@@ -3,13 +3,13 @@
   <channel>
     <title>filmdood Lens Catalog</title>
     <item>
-      <title>Version 1.0.3</title>
-      <pubDate>Mon, 12 Oct 2026 10:55:49 +0000</pubDate>
-      <sparkle:version>5</sparkle:version>
-      <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
+      <title>Version 1.0.4</title>
+      <pubDate>Mon, 12 Oct 2026 13:06:17 +0000</pubDate>
+      <sparkle:version>6</sparkle:version>
+      <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-      <description><![CDATA[<ul><li>Fixed overlapping toolbar buttons after launch and after clearing filters</li><li>Better contrast for the selected brand in dark mode</li><li>A filter with one choice now shows that choice (e.g. “Zoom” instead of “Type · 1”)</li><li>Rounded corner where the sidebar meets the toolbar</li></ul>]]></description>
-      <enclosure url="https://github.com/cineosystems/filmdood-lens-data/releases/download/mac-v1.0.3/filmdood-Lens-Catalog-1.0.3.dmg" sparkle:edSignature="9gZp6nqFYrgRD77erWYrukiQUdcKc6lID+FWAgjYG+nWyr2tfLDdBhGVQc5VaCT9Nla15xHQQq0DLIWzM+TvDg==" length="4679680" type="application/octet-stream"/>
+      <description><![CDATA[<ul><li>See what changed after each catalog update</li><li>Search the whole catalog even when filters are active</li><li>Collapsible brand sidebar with search</li><li>Colour-coded lens specs</li><li>Faster and smoother overall</li><li>Bug fixes and improvements</li></ul>]]></description>
+      <enclosure url="https://github.com/cineosystems/filmdood-lens-data/releases/download/mac-v1.0.4/filmdood-Lens-Catalog-1.0.4.dmg" sparkle:edSignature="4KINE0caukQx5SODfN8VUSGC4YurM0uo+5s/8+qPK1Fe/Ggpt8FKr7C2MMrL8nmTIq9HmnzW+MYibbJO70V0Cg==" length="4909568" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
