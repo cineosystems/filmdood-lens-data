@@ -1,10 +1,10 @@
 {
-  "revision": 202610120919,
-  "version": "v1",
+  "revision": 202610121438,
+  "version": "v2",
   "date": "2026-10-12",
-  "lenses": 3024,
-  "series": 482,
-  "size": 196966,
-  "sha256": "fe84a02b3c805e30882d8fa574cfe751813e9727ac1081cd47177d9ce3776e80",
+  "lenses": 3070,
+  "series": 495,
+  "size": 205153,
+  "sha256": "08f5d68e16f8b58690ef4783af8eebdf41378b65c43e6e699f1ef2a2994defc3",
   "format": 1
 }
