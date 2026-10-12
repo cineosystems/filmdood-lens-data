@@ -257,6 +257,9 @@ a.src:hover{border-color:var(--sel-bd);transform:translateX(3px)}
   .popover{right:16px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* the artifact skeleton used to provide this reset */
+[hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
 /* spec colours (same as the apps) */
 :root{--c-cf:#4a58c9;--c-fr:#177e72;--c-w:#a15c12;--c-l:#9c467a}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c-cf:#8e99f7;--c-fr:#5cc9b5;--c-w:#e2a458;--c-l:#d88bb9}}
